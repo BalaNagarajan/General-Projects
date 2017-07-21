@@ -1,0 +1,133 @@
+
+
+<!DOCTYPE html>
+<html>
+   <script>
+      jQuery(document).ready(function(){
+      
+      jQuery("candidateMessage").hide();
+      var allProgramData;
+          
+         jQuery.ajax({
+      		cache : false,
+      		type : "GET",
+      		dataType : "json",
+      		url : "http://yahoo.com",
+      		success : function(data) {
+      		
+               allProgramData = data;
+               if (data != null && data.length > 0) {
+                 jQuery.each(data, function(index, jsonElement) {
+                      jQuery('#empType').append(jQuery("<option></option>")
+      										.attr("value",jsonElement.empType).text(jsonElement.empType));
+        		})
+               }
+              
+              
+      		},
+      		error : function(response, ioArgs) {
+              	return response;
+      		}
+      
+      	});
+          
+          
+          jQuery("#empType").bind("change", function() {
+      
+      		var empType = document.getElementById("empType").value;
+      		  if (programType != "Select Employment Type") {
+      			  loadPrograms(programType);
+      				}
+      		});
+          
+          function loadPositions(positionType) {
+             if (allProgramData != null && allProgramData.length > 0) {
+                 jQuery("#positionName").empty();
+                 jQuery.each(allProgramData, function(index, jsonElement) {
+                      if(jsonElement.programType == programType) {
+                      jQuery('#positionName').append(jQuery("<option></option>")
+      										.attr("value",jsonElement.positionName).text(jsonElement.positionName));
+                      }
+                      
+      											
+      			})
+                 
+             
+             }
+          }
+      
+      
+      });
+      
+      function createCandidate() {
+             var firstName = jQuery('#firstName').val();
+             var lastName = jQuery('#lastName').val();
+             var empId = jQuery('#empId').val();
+             var email = jQuery('#email').val();
+             var telephone = jQuery('#telephone').val();
+             var empType = jQuery('#empType').val();
+             var positionName = jQuery('#positionName').val();
+             var location = jQuery('#location').val();
+             var candidateObj = {"firstName":firstName,"lastName":lastName,"empId":rut,"email":email,"phone":telephone,"empType":empType,"positionName":positionName,"location":location};
+      
+             
+             jQuery.ajax({
+               url: "http://google.com",
+               type: 'POST',
+               dataType: 'json',
+               data: JSON.stringify(candidateObj),
+               contentType: 'application/json',
+               mimeType: 'application/json',
+      
+                   success: function (data) {
+                            alert(data.statusCode);
+                            var statusCode = data.statusCode;
+                            if(statusCode == 200) {
+                             jQuery("candidateMessage").show();
+                               jQuery("candidateSection").hide();
+                            }
+                            else {
+                            
+                             jQuery("candidateSection").show();
+                             jQuery("candidateMessage").hide();
+                            
+                            }
+                    }
+             });
+             
+             
+             
+             
+          }
+      
+   </script>
+   <div class="span3">
+   <div id = "messageBox" />
+      <aside class="clearfix">
+         <h3>Job Search Form</h3>
+         <form id="candidateForm">
+            <div id="candidateMessage">
+               <h2>Your application submitted successfully</h2>
+            </div>
+            <div id="candidateSection">
+               <label>First Name</label> <input class="input-block-level" id="firstName" type="text" /> <label>Last Name</label> <input id="lastName" class="input-block-level" type="text" /> <label>Emp Id</label> <input class="input-block-level" id="empId" type="text" /> <label>Email</label> <input class="input-block-level" id="email" type="text" /> <label>Telephone</label> <input class="input-block-level" id="telephone" type="text" /> <label>Employment Type</label> 
+               <select id="empType" class="input-block-level">
+                  <option>Select Employment Type</option>
+               </select>
+               <label>Select Position</label> 
+               <select id="positionName" class="input-block-level">
+                  <option>Select Position</option>
+               </select>
+               <label>Location</label> 
+               <select id="location" class="input-block-level">
+                  <option>Chicago</option>
+                  <option>Newyork</option>
+                  <option>Seattle</option>
+               </select>
+               <label class="checkbox"> <input type="checkbox" id="callback" value="" /> Callback </label><button class="btn btn-warning btn-large" type="button" onClick="createCandidate">Create</button>
+            </div>
+         </form>
+      </aside>
+   </div>
+</html>
+
